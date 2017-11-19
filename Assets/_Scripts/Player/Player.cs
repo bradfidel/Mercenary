@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : UnitController
 {
     private Unit m_controlledUnit;
 
@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             MoveUnit();
         }
@@ -45,5 +45,16 @@ public class Player : MonoBehaviour
             //Debug.Log(hit.point);
             m_controlledUnit.movementController.MoveTo(hit.point);
         }
+    }
+
+    public override void TurnReceived()
+    {
+        Debug.Log("Player turn received");
+    }
+
+    [BitStrap.Button]
+    public void EndTurnDebug()
+    {
+        m_controlledUnit.EndTurn();
     }
 }

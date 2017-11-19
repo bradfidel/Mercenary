@@ -36,7 +36,7 @@ public sealed class SpawnSystem : MonoBehaviour
     [BitStrap.Button]
     public void DebugSpawnPlayer()
     {
-        Player player = Spawn(playerPrefab, Vector3.zero).GetComponent<Player>();
+        /* Player player = */ Spawn(playerPrefab, Vector3.zero).GetComponent<Player>();
     }
 
     private void InitialSpawn(int unitsCount)

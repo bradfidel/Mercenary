@@ -4,28 +4,36 @@ public class Unit : MonoBehaviour
 {
     private float m_changeTargetInterval = 10.3f;
     private float m_timer;
+    private bool m_inCombat = false;
 
     private UnitMovementController m_movementController;
     public UnitMovementController movementController { get { return m_movementController; } }
 
-    private Object m_owner = null;
+    private UnitStatistics m_unitStatistics;
+    public UnitStatistics unitStatistics { get { return m_unitStatistics; } }
 
-    private bool m_inCombat = false;
+    private UnitController m_owner = null;
+    private CombatSystem m_combatSystem;
+
+    
 
     private void Awake()
     {
         m_movementController = GetComponent<UnitMovementController>();
+        m_unitStatistics = GetComponent<UnitStatistics>();
     }
 
     private void OnEnable()
     {
         // temp -> later spawn system should call OnSpawn
         OnSpawn();
+        m_unitStatistics.RollRandom();
     }
 
     private void OnSpawn()
     {
-        CombatSystem.RegisterUnit(this);
+        m_combatSystem = CombatSystem.Instance;
+        m_combatSystem.RegisterUnit(this);
     }
 
     private void Update()
@@ -37,7 +45,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public bool Possess(Object newOwner)
+    public bool Possess(UnitController newOwner)
     {
         if (m_owner)
         {
@@ -67,12 +75,11 @@ public class Unit : MonoBehaviour
 
     public void Death()
     {
-        CombatSystem.RemoveUnit(this);
+        m_combatSystem.RemoveUnit(this);
     }
 
     public void NotifyCombatStart()
     {
-        Debug.LogError("TODO");
         m_inCombat = true;
         movementController.Stop();
     }
@@ -94,8 +101,20 @@ public class Unit : MonoBehaviour
                    ));
     }
 
-    private void StartTurn()
+    public void StartTurn()
     {
+        if (m_owner != null)
+        {
+            m_owner.TurnReceived();
+        }
+        else
+        {
+            EndTurn();
+        }
+    }
 
+    public void EndTurn()
+    {
+        m_combatSystem.UnitEndTurn(this);
     }
 }

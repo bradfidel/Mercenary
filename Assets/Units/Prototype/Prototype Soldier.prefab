@@ -432,6 +432,7 @@ GameObject:
   - component: {fileID: 195323598754731780}
   - component: {fileID: 114937479546285340}
   - component: {fileID: 114041055761192110}
+  - component: {fileID: 114903615393545622}
   m_Layer: 0
   m_Name: Prototype Soldier
   m_TagString: Untagged
@@ -936,6 +937,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 402bcaecf96c42c44ad9a9af35739c3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114903615393545622
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1985407083405630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a2e613bce7b1a84f9ceb9ef7ed930ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114937479546285340
