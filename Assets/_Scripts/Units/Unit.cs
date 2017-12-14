@@ -5,6 +5,7 @@ public class Unit : MonoBehaviour
     //private float m_changeTargetInterval = 10.3f;
     private float m_timer;
     private bool m_inCombat = false;
+    public bool inCombat { get { return m_inCombat; } }
 
     public bool hasTurn { get { return m_hasTurn; } }
     private bool m_hasTurn = true;
@@ -112,6 +113,6 @@ public class Unit : MonoBehaviour
     {
         //float movementCost = NavMeshHelper.GetPathMovementCost(transform.position, destination, statistics.speed);
         //Debug.Log(movementCost);
-        movementController.MoveTo(destination, m_inCombat ? statistics.actionPoints : Mathf.Infinity);
+        movementController.MoveTo(destination, m_inCombat ? statistics.actionPoints : 222222); // random big number, Mathf.Inf generate problems
     }
 }

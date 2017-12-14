@@ -8,9 +8,12 @@ public class UnitMovementController : MonoBehaviour
     private UnitStatistics stats;
     public bool isMoving { get { return m_navAgent.velocity.magnitude >= 0.05f; } }
 
+    private Unit m_unit;
+
     private void Awake()
     {
         m_navAgent = GetComponent<NavMeshAgent>();
+        m_unit = GetComponent<Unit>();
         path = new NavMeshPath();
         stats = GetComponent<UnitStatistics>();
     }
@@ -25,7 +28,8 @@ public class UnitMovementController : MonoBehaviour
 
     public void MoveTo(Vector3 destination, float allowedActionPoints)
     {
-        if (isMoving)
+        // make it impossible to change direction during combat
+        if (isMoving && m_unit.inCombat)
             return;
 
         NavMesh.CalculatePath(transform.position, destination, NavMesh.AllAreas, path);
@@ -58,7 +62,8 @@ public class UnitMovementController : MonoBehaviour
 
         Resume();
         m_navAgent.SetDestination(destination);
-        stats.SpendActionPoints(allowedActionPoints - actionPointsLeft);
+        if (m_unit.inCombat)
+            stats.SpendActionPoints(allowedActionPoints - actionPointsLeft);
     }
 
     public void Stop()

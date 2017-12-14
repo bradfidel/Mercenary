@@ -13,9 +13,17 @@ public sealed class UnitStatistics : MonoBehaviour
 
     private int m_maxActionPoints;
 
+    private Unit m_unit;
+
     private void Awake()
     {
-        GetComponent<Unit>().turnStart += OnTurnStart;
+        m_unit = GetComponent<Unit>();
+        m_unit.turnStart += OnTurnStart;
+    }
+
+    private void Update()
+    {
+        DebugCanvas.Display(m_unit.inCombat ? "AP: " + m_actionPoints : "Combat off", 1);
     }
 
     public void RollRandom()
@@ -31,8 +39,15 @@ public sealed class UnitStatistics : MonoBehaviour
 
     public void SpendActionPoints(float amount)
     {
+        if (amount < 0)
+        {
+            Debug.LogError("Negative amount of spent action points " + amount);
+            return;
+        }
+
         m_actionPoints -= amount;
-        if(m_actionPoints < 0)
+
+        if (m_actionPoints < 0)
         {
             Debug.LogError("Unit used more action points than it could");
         }

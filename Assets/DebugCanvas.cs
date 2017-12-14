@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public sealed class DebugCanvas : MonoBehaviour
 {
-    public Text debugText;
+    public Text[] debugText;
 
     private static DebugCanvas m_instance;
 
@@ -12,8 +12,13 @@ public sealed class DebugCanvas : MonoBehaviour
         m_instance = this;
     }
 
-    public static void Display(string text)
+    public static void Display(string text, int i)
     {
-        m_instance.debugText.text = text;
+        if(i >= m_instance.debugText.Length)
+        {
+            Debug.LogError("Too few debug texts");
+        }
+
+        m_instance.debugText[i].text = text;
     }
 }

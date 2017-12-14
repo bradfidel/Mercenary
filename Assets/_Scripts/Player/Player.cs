@@ -5,7 +5,7 @@ public class Player : UnitController
 {
     private Unit m_controlledUnit;
     private NavMeshPath path;
-
+    
     private void Awake()
     {
         path = new NavMeshPath();
@@ -39,7 +39,7 @@ public class Player : UnitController
             pathLength += (path.corners[i - 1] - path.corners[i]).magnitude;
             //Debug.DrawLine(path.corners[i - 1], path.corners[i], Color.cyan);
         }
-        DebugCanvas.Display(((int)pathLength).ToString());
+        DebugCanvas.Display("Path length: " + pathLength, 0);
     }
 
     private void GetRandomUnit()

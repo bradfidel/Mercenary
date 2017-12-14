@@ -22,7 +22,6 @@ public class CombatSystem : MonoBehaviour
     public void RegisterUnit(Unit unit)
     {
         m_registeredUnits.Add(unit);
-        //if (debug) Debug.Log("[CombatSystem] Unit registered, count: " + m_registeredUnits.Count);
     }
 
     public void RemoveUnit(Unit unit)
