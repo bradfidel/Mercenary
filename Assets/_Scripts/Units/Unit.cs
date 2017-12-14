@@ -2,47 +2,44 @@
 
 public class Unit : MonoBehaviour
 {
-    private float m_changeTargetInterval = 10.3f;
+    //private float m_changeTargetInterval = 10.3f;
     private float m_timer;
     private bool m_inCombat = false;
+
+    public bool hasTurn { get { return m_hasTurn; } }
+    private bool m_hasTurn = true;
 
     private UnitMovementController m_movementController;
     public UnitMovementController movementController { get { return m_movementController; } }
 
-    private UnitStatistics m_unitStatistics;
-    public UnitStatistics unitStatistics { get { return m_unitStatistics; } }
+    private UnitStatistics m_statistics;
+    public UnitStatistics statistics { get { return m_statistics; } }
 
     private UnitController m_owner = null;
     private CombatSystem m_combatSystem;
 
-    
+    public delegate void TurnStart();
+    public event TurnStart turnStart;
+
+    // TODO store callback with currently ongoing action - to start another one previous must finish first
 
     private void Awake()
     {
         m_movementController = GetComponent<UnitMovementController>();
-        m_unitStatistics = GetComponent<UnitStatistics>();
+        m_statistics = GetComponent<UnitStatistics>();
     }
 
     private void OnEnable()
     {
         // temp -> later spawn system should call OnSpawn
         OnSpawn();
-        m_unitStatistics.RollRandom();
+        m_statistics.RollRandom();
     }
 
     private void OnSpawn()
     {
         m_combatSystem = CombatSystem.Instance;
         m_combatSystem.RegisterUnit(this);
-    }
-
-    private void Update()
-    {
-        if (m_timer < Time.time && !m_owner && !m_inCombat)
-        {
-            m_timer = m_changeTargetInterval + Time.time;
-            GoToRandomPlace();
-        }
     }
 
     public bool Possess(UnitController newOwner)
@@ -89,20 +86,11 @@ public class Unit : MonoBehaviour
         Debug.LogError("TODO");
         m_inCombat = false;
         movementController.Resume();
-        GoToRandomPlace();
-    }
-
-    private void GoToRandomPlace()
-    {
-        m_movementController.MoveTo(new Vector3(
-                   Random.Range(-50, 50),
-                   0,
-                   Random.Range(-50, 50)
-                   ));
     }
 
     public void StartTurn()
     {
+        turnStart();
         if (m_owner != null)
         {
             m_owner.TurnReceived();
@@ -111,10 +99,19 @@ public class Unit : MonoBehaviour
         {
             EndTurn();
         }
+        m_hasTurn = true;
     }
 
     public void EndTurn()
     {
+        m_hasTurn = false;
         m_combatSystem.UnitEndTurn(this);
+    }
+
+    public void MoveTo(Vector3 destination)
+    {
+        //float movementCost = NavMeshHelper.GetPathMovementCost(transform.position, destination, statistics.speed);
+        //Debug.Log(movementCost);
+        movementController.MoveTo(destination, m_inCombat ? statistics.actionPoints : Mathf.Infinity);
     }
 }

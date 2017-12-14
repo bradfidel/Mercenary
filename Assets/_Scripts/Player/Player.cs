@@ -1,8 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 public class Player : UnitController
 {
     private Unit m_controlledUnit;
+    private NavMeshPath path;
+
+    private void Awake()
+    {
+        path = new NavMeshPath();
+    }
 
     private void Start()
     {
@@ -15,6 +22,24 @@ public class Player : UnitController
         {
             MoveUnit();
         }
+
+        CalculateMoveCost();
+    }
+
+    private void CalculateMoveCost()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100f))
+            NavMesh.CalculatePath(m_controlledUnit.transform.position, hit.point, NavMesh.AllAreas, path);
+
+        float pathLength = 0;
+        for (int i = 1; i < path.corners.Length; i++)
+        {
+            pathLength += (path.corners[i - 1] - path.corners[i]).magnitude;
+            //Debug.DrawLine(path.corners[i - 1], path.corners[i], Color.cyan);
+        }
+        DebugCanvas.Display(((int)pathLength).ToString());
     }
 
     private void GetRandomUnit()
@@ -43,7 +68,7 @@ public class Player : UnitController
         if (Physics.Raycast(ray, out hit, 100f))
         {
             //Debug.Log(hit.point);
-            m_controlledUnit.movementController.MoveTo(hit.point);
+            m_controlledUnit.MoveTo(hit.point);
         }
     }
 

@@ -60,9 +60,9 @@ public class CombatSystem : MonoBehaviour
 
         m_unitsWaitingForTurn.Sort(delegate (Unit a, Unit b)
             {
-                if (a.unitStatistics.initiative > b.unitStatistics.initiative)
+                if (a.statistics.initiative > b.statistics.initiative)
                     return -1;
-                else if (a.unitStatistics.initiative < b.unitStatistics.initiative)
+                else if (a.statistics.initiative < b.statistics.initiative)
                     return 1;
                 else
                     return 0;
@@ -78,7 +78,7 @@ public class CombatSystem : MonoBehaviour
     private void StartNextTurn()
     {
         Unit unit = m_unitsWaitingForTurn[0];
-        Debug.LogError(unit.name + "'s initiative: " + unit.unitStatistics.initiative);
+        Debug.LogError(unit.name + "'s initiative: " + unit.statistics.initiative);
         m_unitsWaitingForTurn.RemoveAt(0);
         unit.StartTurn();
     }
